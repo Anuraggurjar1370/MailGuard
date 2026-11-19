@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>MailGuard Shield</title>
+  <style>
+    body {
+      width: 340px;
+      margin: 0;
+      padding: 16px;
+      background: #030712;
+      color: #f8fafc;
+      font-family: system-ui, -apple-system, sans-serif;
+    }
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      border-bottom: 1px solid #1e293b;
+      padding-bottom: 8px;
+    }
+    .title {
+      font-weight: 800;
+      font-size: 14px;
+      color: #38bdf8;
+    }
+    textarea {
+      width: 100%;
+      height: 80px;
+      box-sizing: border-box;
+      background: #0f172a;
+      border: 1px solid #334155;
+      border-radius: 8px;
+      color: #fff;
+      padding: 8px;
+      font-size: 11px;
+      resize: none;
+      outline: none;
+    }
+    button {
+      width: 100%;
+      margin-top: 8px;
+      padding: 8px;
+      border: none;
+      border-radius: 8px;
+      background: #0284c7;
+      color: #fff;
+      font-weight: 700;
+      font-size: 12px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    button:hover {
+      background: #0369a1;
+    }
+    .result {
+      margin-top: 12px;
+      padding: 10px;
+      border-radius: 8px;
+      background: #0f172a;
+      border: 1px solid #1e293b;
+      font-size: 11px;
+      display: none;
+    }
+    .verdict-badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-weight: bold;
+      text-transform: uppercase;
+      font-size: 10px;
+    }
+    .danger { background: rgba(239, 68, 68, 0.2); color: #f87171; }
+    .safe { background: rgba(16, 185, 129, 0.2); color: #34d399; }
+    .suspicious { background: rgba(245, 158, 11, 0.2); color: #fbbf24; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <span class="title">MailGuard Shield</span>
+    <span style="font-size: 10px; color: #94a3b8;">Local API</span>
+  </div>
+
+  <textarea id="email-text" placeholder="Paste email text or suspicious URL here..."></textarea>
+  <button id="btn-scan">Scan for Phishing</button>
+
+  <div id="result-box" class="result">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+      <span id="res-badge" class="verdict-badge">Safe</span>
+      <span id="res-score" style="font-weight: bold; font-size: 14px;">0/100</span>
+    </div>
+    <div id="res-desc" style="color: #94a3b8; margin-bottom: 6px;"></div>
+    <div id="res-reasons" style="color: #cbd5e1; font-size: 10px; line-height: 1.4;"></div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

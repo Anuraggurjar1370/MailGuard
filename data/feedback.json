@@ -1,0 +1,191 @@
+[
+  {
+    "id": "fb_1795076056085",
+    "timestamp": "2026-11-19 13:44:16",
+    "email_snippet": "Dear User,\n\nWe have detected unusual login activity on your account. For your security, your account has been temporarily flagged.\n\nTo avoid permanent",
+    "predicted_verdict": "Dangerous",
+    "user_reported_label": "Accurate",
+    "comments": "",
+    "status": "pending_review"
+  },
+  {
+    "id": "fb_1795075768448",
+    "timestamp": "2026-11-19 13:39:28",
+    "email_snippet": "Urgent invoice transfer request",
+    "predicted_verdict": "Dangerous",
+    "user_reported_label": "True Positive",
+    "comments": "Correctly detected CEO wire fraud",
+    "status": "pending_review"
+  },
+  {
+    "id": "fb_1795075767408",
+    "timestamp": "2026-11-19 13:39:27",
+    "email_snippet": "Test email snippet",
+    "predicted_verdict": "Safe",
+    "user_reported_label": "Correct",
+    "comments": "Accurate prediction",
+    "status": "pending_review"
+  },
+  {
+    "id": "fb_1795075713342",
+    "timestamp": "2026-11-19 13:38:33",
+    "email_snippet": "Urgent invoice transfer request",
+    "predicted_verdict": "Dangerous",
+    "user_reported_label": "True Positive",
+    "comments": "Correctly detected CEO wire fraud",
+    "status": "pending_review"
+  },
+  {
+    "id": "fb_1795075712420",
+    "timestamp": "2026-11-19 13:38:32",
+    "email_snippet": "Test email snippet",
+    "predicted_verdict": "Safe",
+    "user_reported_label": "Correct",
+    "comments": "Accurate prediction",
+    "status": "pending_review"
+  },
+  {
+    "id": "fb_1795075698512",
+    "timestamp": "2026-11-19 13:38:18",
+    "email_snippet": "Test email snippet",
+    "predicted_verdict": "Safe",
+    "user_reported_label": "Correct",
+    "comments": "Accurate prediction",
+    "status": "pending_review"
+  },
+  {
+    "id": "fb_1795075660404",
+    "timestamp": "2026-11-19 13:37:40",
+    "email_snippet": "Test email snippet",
+    "predicted_verdict": "Safe",
+    "user_reported_label": "Correct",
+    "comments": "Accurate prediction",
+    "status": "pending_review"
+  },
+  {
+    "id": "fb_1795074841871",
+    "timestamp": "2026-11-19 13:24:01",
+    "email_snippet": "Test email snippet",
+    "predicted_verdict": "Safe",
+    "user_reported_label": "Correct",
+    "comments": "Accurate prediction",
+    "status": "pending_review"
+  },
+  {
+    "id": "fb_1795074514636",
+    "timestamp": "2026-11-19 13:18:34",
+    "email_snippet": "Urgent invoice transfer request",
+    "predicted_verdict": "Dangerous",
+    "user_reported_label": "True Positive",
+    "comments": "Correctly detected CEO wire fraud",
+    "status": "pending_review"
+  },
+  {
+    "id": "fb_1795074514129",
+    "timestamp": "2026-11-19 13:18:34",
+    "email_snippet": "Test email snippet",
+    "predicted_verdict": "Safe",
+    "user_reported_label": "Correct",
+    "comments": "Accurate prediction",
+    "status": "pending_review"
+  },
+  {
+    "id": "fb_1795074486069",
+    "timestamp": "2026-11-19 13:18:06",
+    "email_snippet": "Urgent invoice transfer request",
+    "predicted_verdict": "Dangerous",
+    "user_reported_label": "True Positive",
+    "comments": "Correctly detected CEO wire fraud",
+    "status": "pending_review"
+  },
+  {
+    "id": "fb_1795074485917",
+    "timestamp": "2026-11-19 13:18:05",
+    "email_snippet": "Test email snippet",
+    "predicted_verdict": "Safe",
+    "user_reported_label": "Correct",
+    "comments": "Accurate prediction",
+    "status": "pending_review"
+  },
+  {
+    "id": "fb_1795067894702",
+    "timestamp": "2026-11-19 11:28:14",
+    "email_snippet": "Urgent invoice transfer request",
+    "predicted_verdict": "Dangerous",
+    "user_reported_label": "True Positive",
+    "comments": "Correctly detected CEO wire fraud",
+    "status": "pending_review"
+  },
+  {
+    "id": "fb_1795067894355",
+    "timestamp": "2026-11-19 11:28:14",
+    "email_snippet": "Test email snippet",
+    "predicted_verdict": "Safe",
+    "user_reported_label": "Correct",
+    "comments": "Accurate prediction",
+    "status": "pending_review"
+  },
+  {
+    "id": "fb_1795067832276",
+    "timestamp": "2026-11-19 11:27:12",
+    "email_snippet": "Urgent invoice transfer request",
+    "predicted_verdict": "Dangerous",
+    "user_reported_label": "True Positive",
+    "comments": "Correctly detected CEO wire fraud",
+    "status": "pending_review"
+  },
+  {
+    "id": "fb_1795067831977",
+    "timestamp": "2026-11-19 11:27:11",
+    "email_snippet": "Test email snippet",
+    "predicted_verdict": "Safe",
+    "user_reported_label": "Correct",
+    "comments": "Accurate prediction",
+    "status": "pending_review"
+  },
+  {
+    "id": "fb_1795066086927",
+    "timestamp": "2026-11-19 10:58:06",
+    "email_snippet": "Urgent invoice transfer request",
+    "predicted_verdict": "Dangerous",
+    "user_reported_label": "True Positive",
+    "comments": "Correctly detected CEO wire fraud",
+    "status": "pending_review"
+  },
+  {
+    "id": "fb_1795066086891",
+    "timestamp": "2026-11-19 10:58:06",
+    "email_snippet": "Test email snippet",
+    "predicted_verdict": "Safe",
+    "user_reported_label": "Correct",
+    "comments": "Accurate prediction",
+    "status": "pending_review"
+  },
+  {
+    "id": "fb_1795065906625",
+    "timestamp": "2026-11-19 10:55:06",
+    "email_snippet": "Urgent invoice transfer request",
+    "predicted_verdict": "Dangerous",
+    "user_reported_label": "True Positive",
+    "comments": "Correctly detected CEO wire fraud",
+    "status": "pending_review"
+  },
+  {
+    "id": "fb_1795065906539",
+    "timestamp": "2026-11-19 10:55:06",
+    "email_snippet": "Test email snippet",
+    "predicted_verdict": "Safe",
+    "user_reported_label": "Correct",
+    "comments": "Accurate prediction",
+    "status": "pending_review"
+  },
+  {
+    "id": "fb_1795065863144",
+    "timestamp": "2026-11-19 10:54:23",
+    "email_snippet": "Urgent invoice transfer request",
+    "predicted_verdict": "Dangerous",
+    "user_reported_label": "True Positive",
+    "comments": "Correctly detected CEO wire fraud",
+    "status": "pending_review"
+  }
+]

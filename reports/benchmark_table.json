@@ -1,0 +1,42 @@
+[
+  {
+    "Model": "Naive Bayes",
+    "Accuracy": "100.00%",
+    "Recall (Phish)": "100.00%",
+    "Precision": "100.00%",
+    "F1-Score": "100.00%",
+    "ROC-AUC": "1.0000",
+    "Latency (ms)": "0.01 ms",
+    "Size (KB)": "126.1 KB"
+  },
+  {
+    "Model": "Calibrated Linear SVM",
+    "Accuracy": "100.00%",
+    "Recall (Phish)": "100.00%",
+    "Precision": "100.00%",
+    "F1-Score": "100.00%",
+    "ROC-AUC": "1.0000",
+    "Latency (ms)": "0.01 ms",
+    "Size (KB)": "96.1 KB"
+  },
+  {
+    "Model": "Logistic Regression",
+    "Accuracy": "100.00%",
+    "Recall (Phish)": "100.00%",
+    "Precision": "100.00%",
+    "F1-Score": "100.00%",
+    "ROC-AUC": "1.0000",
+    "Latency (ms)": "0.00 ms",
+    "Size (KB)": "32.2 KB"
+  },
+  {
+    "Model": "Soft-Voting Ensemble",
+    "Accuracy": "100.00%",
+    "Recall (Phish)": "100.00%",
+    "Precision": "100.00%",
+    "F1-Score": "100.00%",
+    "ROC-AUC": "1.0000",
+    "Latency (ms)": "0.03 ms",
+    "Size (KB)": "507.2 KB"
+  }
+]

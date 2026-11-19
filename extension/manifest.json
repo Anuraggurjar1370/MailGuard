@@ -1,0 +1,28 @@
+{
+  "manifest_version": 3,
+  "name": "MailGuard - Phishing Detection Shield",
+  "version": "1.0.0",
+  "description": "Explainable multi-layer phishing and Business Email Compromise (BEC) detection for webmail.",
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "MailGuard Security Inspector"
+  },
+  "permissions": [
+    "activeTab",
+    "scripting"
+  ],
+  "host_permissions": [
+    "http://127.0.0.1:8000/*",
+    "http://localhost:8000/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "*://mail.google.com/*",
+        "*://outlook.live.com/*",
+        "*://outlook.office.com/*"
+      ],
+      "js": ["content.js"]
+    }
+  ]
+}

@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MailGuard | Explainable Phishing Detection Platform</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col font-sans selection:bg-cyan-500 selection:text-black">
+
+  <!-- Background decorative glows -->
+  <div class="fixed inset-0 pointer-events-none overflow-hidden z-0">
+    <div class="glow-orb -top-40 -left-40 bg-cyan-500/10 w-96 h-96 rounded-full blur-3xl"></div>
+    <div class="glow-orb top-1/3 -right-40 bg-indigo-500/10 w-[30rem] h-[30rem] rounded-full blur-3xl"></div>
+    <div class="glow-orb -bottom-40 left-1/3 bg-emerald-500/10 w-96 h-96 rounded-full blur-3xl"></div>
+  </div>
+
+  <!-- Header / Navigation Bar -->
+  <header class="relative z-10 border-b border-slate-800/80 bg-slate-900/60 backdrop-blur-md sticky top-0">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center shadow-lg shadow-cyan-500/20 ring-1 ring-cyan-400/30">
+          <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+          </svg>
+        </div>
+        <div>
+          <div class="flex items-center space-x-2">
+            <span class="text-xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white via-slate-100 to-slate-400">MailGuard</span>
+          </div>
+          <p class="text-xs text-slate-400">Explainable Multi-Layer Phishing Defense</p>
+        </div>
+      </div>
+
+      <nav class="flex items-center space-x-1 sm:space-x-2 overflow-x-auto">
+        <button id="nav-scan-tab" class="nav-tab active">Scanner</button>
+        <button id="nav-sim-tab" class="nav-tab">Simulator Quiz</button>
+        <button id="nav-batch-tab" class="nav-tab">Batch Scan</button>
+        <button id="nav-attach-tab" class="nav-tab">Attachment Check</button>
+        <button id="nav-eml-tab" class="nav-tab">.EML Inspector</button>
+        <button id="nav-url-tab" class="nav-tab">URL Sandbox</button>
+        <button id="nav-models-tab" class="nav-tab">Benchmarks</button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="relative z-10 flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+
+    <!-- Toast Notification Banner -->
+    <div id="toast-banner" class="fixed top-20 right-6 z-50 transform transition-all duration-300 translate-y-[-20px] opacity-0 pointer-events-none p-4 rounded-xl shadow-2xl border text-xs font-semibold flex items-center space-x-2"></div>
+
+    <!-- SECTION 1: Text Scanner View -->
+    <div id="view-scanner" class="space-y-6">
+      <!-- Hero banner -->
+      <section class="glass-panel p-6 sm:p-8 rounded-2xl relative overflow-hidden border border-slate-800">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
+          <div class="space-y-2 max-w-2xl">
+            <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-xs font-medium">
+              <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+              <span>Explainable Machine Learning + Psychological Tactic Radar Active</span>
+            </div>
+            <h1 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
+              Explainable Multi-Layer <span class="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-blue-500">Phishing Analysis</span>
+            </h1>
+            <p class="text-slate-400 text-sm sm:text-base leading-relaxed">
+              Detects credential harvesting, BEC wire fraud, brand impersonation, and urgency pressure with token-level visual evidence.
+            </p>
+          </div>
+          <div class="flex flex-col sm:flex-row gap-3">
+            <button id="btn-sample-phish" class="btn-preset bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/30">
+              <svg class="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+              Try Phishing Attack Sample
+            </button>
+            <button id="btn-sample-legit" class="btn-preset bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+              <svg class="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              Try Legitimate Corporate Sample
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <!-- Input Panel -->
+        <section class="lg:col-span-5 space-y-4">
+          <div class="glass-panel p-6 rounded-2xl border border-slate-800 space-y-4">
+            <div class="flex items-center justify-between">
+              <h2 class="text-lg font-bold text-white flex items-center">
+                <svg class="w-5 h-5 mr-2 text-cyan-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                Email Content Analyzer
+              </h2>
+              <button id="btn-clear-input" class="text-xs text-slate-400 hover:text-white transition">Clear Form</button>
+            </div>
+
+            <div class="space-y-3">
+              <div>
+                <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1">Subject</label>
+                <input type="text" id="scan-subject" placeholder="e.g. CRITICAL: Account Access Restricted" class="form-input">
+              </div>
+
+              <div>
+                <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1">Sender (From Header)</label>
+                <input type="text" id="scan-sender" placeholder="e.g. PayPal Security &lt;security@paypa1-support.com&gt;" class="form-input">
+              </div>
+
+              <div>
+                <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1">Email Body Content</label>
+                <textarea id="scan-body" rows="9" placeholder="Paste full email text, URLs, or raw message here..." class="form-input font-mono text-sm leading-relaxed"></textarea>
+              </div>
+            </div>
+
+            <button id="btn-run-scan" class="w-full py-3.5 px-4 rounded-xl font-bold text-white bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 transition shadow-lg shadow-cyan-500/25 flex items-center justify-center space-x-2">
+              <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+              <span>Run Multi-Layer Inspection</span>
+            </button>
+          </div>
+        </section>
+
+        <!-- Results Panel -->
+        <section class="lg:col-span-7 space-y-6">
+          <div id="results-card" class="glass-panel p-6 sm:p-8 rounded-2xl border border-slate-800 space-y-6 hidden">
+            
+            <!-- Brand Impersonation Banner (conditional) -->
+            <div id="brand-warning-banner" class="hidden p-4 rounded-xl bg-rose-950/40 border border-rose-500/40 text-rose-300 text-xs flex items-center space-x-3">
+              <svg class="w-5 h-5 shrink-0 text-rose-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+              <span id="brand-warning-text" class="font-semibold"></span>
+            </div>
+
+            <!-- Top Row: Risk Gauge & Verdict Banner -->
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-6 pb-6 border-b border-slate-800">
+              <div class="flex items-center space-x-6">
+                <div class="relative w-32 h-32 flex items-center justify-center">
+                  <svg class="w-32 h-32 transform -rotate-90">
+                    <circle cx="64" cy="64" r="54" stroke="currentColor" stroke-width="12" class="text-slate-800" fill="transparent" />
+                    <circle id="gauge-circle" cx="64" cy="64" r="54" stroke="currentColor" stroke-width="12" class="text-cyan-400 transition-all duration-1000 ease-out" fill="transparent" stroke-dasharray="339.29" stroke-dashoffset="339.29" stroke-linecap="round" />
+                  </svg>
+                  <div class="absolute flex flex-col items-center justify-center">
+                    <span id="gauge-score" class="text-3xl font-extrabold text-white">0</span>
+                    <span class="text-[10px] uppercase font-bold text-slate-400">Risk Score</span>
+                  </div>
+                </div>
+
+                <div class="space-y-1">
+                  <div class="flex items-center space-x-2">
+                    <span id="verdict-badge" class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-slate-800 text-slate-300">Evaluating...</span>
+                    <span id="scan-latency" class="text-xs text-slate-400 font-mono">1.2ms</span>
+                  </div>
+                  <h3 id="verdict-title" class="text-2xl font-black tracking-tight text-white">Pending Scan</h3>
+                  <p id="verdict-desc" class="text-xs text-slate-400 max-w-sm">Awaiting email payload for inspection.</p>
+                </div>
+              </div>
+
+              <!-- Actions & Print Report -->
+              <div class="flex flex-col items-end space-y-2">
+                <div class="flex flex-wrap gap-2 justify-end">
+                  <button id="btn-test-adversarial" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-indigo-950/70 hover:bg-indigo-900 text-indigo-300 border border-indigo-700/50 transition flex items-center space-x-1.5">
+                    <svg class="w-3.5 h-3.5 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                    <span>Test Adversarial</span>
+                  </button>
+                  <button id="btn-download-pdf-scan" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-cyan-950/70 hover:bg-cyan-900 text-cyan-300 border border-cyan-700/50 transition flex items-center space-x-1.5">
+                    <svg class="w-3.5 h-3.5 text-cyan-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                    <span>Download PDF</span>
+                  </button>
+                  <button id="btn-print-report" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition flex items-center space-x-1.5">
+                    <svg class="w-3.5 h-3.5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+                    <span>Print</span>
+                  </button>
+                </div>
+                <div class="text-right">
+                  <span class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider block">Classifier</span>
+                  <span id="classifier-name" class="text-xs font-bold text-cyan-300 block">Soft-Voting Ensemble</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Adversarial Test Panel (Conditional) -->
+            <div id="adversarial-test-box" class="hidden p-4 rounded-xl bg-indigo-950/40 border border-indigo-500/40 space-y-2 text-xs">
+              <div class="flex items-center justify-between">
+                <span class="font-bold text-indigo-300 uppercase tracking-wider flex items-center">
+                  <svg class="w-4 h-4 mr-1.5 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                  Adversarial Perturbation Defense Report
+                </span>
+                <span id="adv-robust-badge" class="px-2.5 py-0.5 rounded text-[10px] font-bold uppercase bg-indigo-500/20 text-indigo-200">Robustness: 95%</span>
+              </div>
+              <p id="adv-summary-text" class="text-slate-300"></p>
+              <div class="font-mono text-[11px] p-2.5 rounded bg-slate-950 border border-slate-800 text-slate-400">
+                <span class="text-slate-500 block text-[9px] uppercase">Perturbed Attack Payload Preview:</span>
+                <span id="adv-perturbed-text"></span>
+              </div>
+            </div>
+
+            <!-- Tactic Radar & Key Reasons Side by Side -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+              <div class="space-y-2">
+                <h4 class="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center">
+                  <svg class="w-4 h-4 mr-1.5 text-cyan-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                  Security Findings
+                </h4>
+                <div id="key-reasons-list" class="space-y-1.5"></div>
+              </div>
+
+              <!-- Radar Chart Canvas -->
+              <div class="p-3 rounded-xl bg-slate-900/60 border border-slate-800 flex flex-col items-center">
+                <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1">Psychological Tactic Radar</span>
+                <div class="w-56 h-56">
+                  <canvas id="tactic-radar-canvas"></canvas>
+                </div>
+              </div>
+            </div>
+
+            <!-- Explainable AI (XAI) Highlighted Evidence View -->
+            <div class="space-y-3 pt-4 border-t border-slate-800">
+              <div class="flex items-center justify-between">
+                <h4 class="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center">
+                  <svg class="w-4 h-4 mr-1.5 text-cyan-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                  XAI Feature Attribution Heatmap
+                </h4>
+                <div class="flex items-center space-x-3 text-xs">
+                  <span class="flex items-center text-rose-400"><span class="w-2.5 h-2.5 rounded bg-rose-500 mr-1"></span>Phishing Cue</span>
+                  <span class="flex items-center text-emerald-400"><span class="w-2.5 h-2.5 rounded bg-emerald-500 mr-1"></span>Legitimate Anchor</span>
+                </div>
+              </div>
+              <div id="highlighted-text-container" class="p-4 rounded-xl bg-slate-900/90 border border-slate-800/80 font-mono text-sm leading-relaxed text-slate-200 overflow-x-auto max-h-56 whitespace-pre-wrap"></div>
+            </div>
+
+            <!-- URL Findings List -->
+            <div id="url-findings-section" class="space-y-2 pt-2 border-t border-slate-800">
+              <h4 class="text-xs font-bold uppercase tracking-wider text-slate-300">Detected Link Defanging & Typosquat Analysis</h4>
+              <div id="url-findings-list" class="space-y-1.5"></div>
+            </div>
+
+            <!-- Active Learning Feedback Bar -->
+            <div class="pt-4 border-t border-slate-800 flex items-center justify-between text-xs bg-slate-900/40 p-3 rounded-xl">
+              <span class="text-slate-400">Was this detection verdict accurate?</span>
+              <div class="flex space-x-2">
+                <button id="btn-feedback-accurate" class="px-3 py-1 rounded bg-emerald-500/20 text-emerald-300 hover:bg-emerald-500/30 transition">👍 Accurate</button>
+                <button id="btn-feedback-false" class="px-3 py-1 rounded bg-rose-500/20 text-rose-300 hover:bg-rose-500/30 transition">👎 Report Inaccuracy</button>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Empty State -->
+          <div id="empty-state" class="glass-panel p-12 rounded-2xl border border-slate-800 flex flex-col items-center justify-center text-center space-y-4">
+            <div class="w-16 h-16 rounded-2xl bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-500">
+              <svg class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            </div>
+            <div>
+              <h3 class="text-base font-bold text-slate-300">Awaiting Email Scan</h3>
+              <p class="text-xs text-slate-500 max-w-sm mt-1">Select one of the sample presets above or paste email content to see the live multi-layer explanation.</p>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <!-- SECTION 2: Gamified Simulator Quiz View -->
+    <div id="view-sim" class="hidden space-y-6">
+      <div class="glass-panel p-8 rounded-2xl border border-slate-800 space-y-6">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-800">
+          <div>
+            <h2 class="text-2xl font-black text-white">Gamified Phishing Training Simulator</h2>
+            <p class="text-xs text-slate-400 mt-1">Practice identifying sophisticated social engineering attacks and earn defender badges.</p>
+          </div>
+          <!-- Game Stats -->
+          <div class="flex items-center space-x-6 text-center font-mono">
+            <div class="p-2 rounded-xl bg-slate-900 border border-slate-800 min-w-20">
+              <span class="text-[10px] uppercase text-slate-400 block">Score</span>
+              <span id="sim-score" class="text-xl font-bold text-cyan-400">0</span>
+            </div>
+            <div class="p-2 rounded-xl bg-slate-900 border border-slate-800 min-w-20">
+              <span class="text-[10px] uppercase text-slate-400 block">Streak</span>
+              <span id="sim-streak" class="text-xl font-bold text-amber-400">🔥 0</span>
+            </div>
+            <div class="p-2 rounded-xl bg-slate-900 border border-slate-800 min-w-28">
+              <span class="text-[10px] uppercase text-slate-400 block">Defender Rank</span>
+              <span id="sim-level" class="text-xs font-bold text-emerald-400 block mt-1">Novice Guard</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quiz Scenario Box -->
+        <div id="sim-scenario-box" class="p-6 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-4">
+          <div class="flex items-center justify-between">
+            <span id="sim-diff-badge" class="px-2.5 py-0.5 rounded text-[10px] font-bold uppercase bg-amber-500/20 text-amber-300">Difficulty: Medium</span>
+            <span class="text-xs text-slate-400">Scenario Assessment</span>
+          </div>
+
+          <div class="space-y-1 font-mono text-xs">
+            <p class="text-slate-300"><strong class="text-white">Subject:</strong> <span id="sim-subject">...</span></p>
+            <p class="text-slate-300"><strong class="text-white">From:</strong> <span id="sim-sender" class="text-cyan-300">...</span></p>
+          </div>
+
+          <div id="sim-body" class="p-4 rounded-xl bg-slate-950 font-mono text-xs leading-relaxed text-slate-200 whitespace-pre-wrap max-h-56 overflow-y-auto">...</div>
+
+          <!-- Answer Buttons -->
+          <div id="sim-btn-group" class="grid grid-cols-2 gap-4 pt-2">
+            <button id="btn-guess-phish" class="py-3 px-4 rounded-xl font-bold text-white bg-rose-600 hover:bg-rose-500 transition shadow-lg shadow-rose-600/20 flex items-center justify-center space-x-2">
+              <span>🚩 Flag as Phishing Attack</span>
+            </button>
+            <button id="btn-guess-legit" class="py-3 px-4 rounded-xl font-bold text-white bg-emerald-600 hover:bg-emerald-500 transition shadow-lg shadow-emerald-600/20 flex items-center justify-center space-x-2">
+              <span>✅ Mark as Legitimate</span>
+            </button>
+          </div>
+
+          <!-- Explanation Feedback Box -->
+          <div id="sim-feedback-box" class="hidden p-5 rounded-xl border space-y-3">
+            <div class="flex items-center justify-between">
+              <span id="sim-result-title" class="text-base font-bold"></span>
+              <button id="btn-next-scenario" class="px-4 py-1.5 rounded-lg text-xs font-bold bg-cyan-600 hover:bg-cyan-500 text-white transition">Next Challenge &rarr;</button>
+            </div>
+            <p id="sim-explanation" class="text-xs text-slate-300 leading-relaxed"></p>
+            <div>
+              <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-1">Red Flag Checklist:</span>
+              <ul id="sim-indicators-list" class="text-xs list-disc list-inside space-y-1 text-slate-300"></ul>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- SECTION 3: Batch Scanner View -->
+    <div id="view-batch" class="hidden space-y-6">
+      <div class="glass-panel p-8 rounded-2xl border border-slate-800 space-y-6">
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+          <div>
+            <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 text-xs font-medium mb-2">
+              <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
+              <span>Dataset Attachment & Multi-Email Threat Classification</span>
+            </div>
+            <h2 class="text-2xl font-bold text-white">Dataset Batch Email Classifier & Forensics</h2>
+            <p class="text-xs text-slate-400 mt-1 max-w-2xl">Attach a dataset of emails (.CSV or .JSON) to automatically flag phishing vs legitimate emails, evaluate risk scores, generate individual forensic audit reports, and download PDF dossiers.</p>
+          </div>
+          <div class="flex flex-wrap gap-2">
+            <a href="/api/v1/dataset/sample" download="mailguard_sample_dataset.csv" id="btn-download-sample-csv" class="px-3.5 py-2 rounded-xl text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-slate-700 transition flex items-center space-x-1.5">
+              <svg class="w-3.5 h-3.5 text-cyan-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+              <span>Download Sample Dataset (.CSV)</span>
+            </a>
+            <button id="btn-load-sample-batch" class="px-3.5 py-2 rounded-xl text-xs font-semibold bg-indigo-950/70 hover:bg-indigo-900 text-indigo-300 border border-indigo-700/50 transition flex items-center space-x-1.5">
+              <svg class="w-3.5 h-3.5 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+              <span>Load 12 Benchmark Emails</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Dataset Attachment Drag & Drop Zone -->
+        <div id="dataset-dropzone" class="border-2 border-dashed border-slate-700 hover:border-cyan-500/70 rounded-2xl p-8 flex flex-col items-center justify-center text-center transition cursor-pointer bg-slate-900/50 group">
+          <div class="w-12 h-12 rounded-xl bg-cyan-500/10 group-hover:bg-cyan-500/20 text-cyan-400 flex items-center justify-center mb-3 transition">
+            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+            </svg>
+          </div>
+          <p class="text-sm font-semibold text-slate-200">Attach or Drop your Email Dataset here, or <span class="text-cyan-400 underline decoration-cyan-400/50">browse files</span></p>
+          <p class="text-xs text-slate-400 mt-1">Accepts <span class="text-slate-300 font-mono">.csv</span> (with text/body/subject/sender columns) or <span class="text-slate-300 font-mono">.json</span> arrays. Up to 100 emails analyzed.</p>
+          <input type="file" id="batch-file-input" accept=".csv,.json,.txt" class="hidden">
+        </div>
+
+        <!-- Selected File Status & Action Bar -->
+        <div id="dataset-file-bar" class="hidden p-4 rounded-xl bg-slate-900 border border-slate-700 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
+          <div class="flex items-center space-x-3">
+            <div class="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold">FILE</div>
+            <div>
+              <span id="dataset-file-name" class="font-bold text-white text-sm">dataset.csv</span>
+              <span id="dataset-file-size" class="text-slate-400 ml-2 font-mono">4.2 KB</span>
+              <span id="dataset-row-preview" class="text-cyan-400 ml-2 font-mono">Ready to scan</span>
+            </div>
+          </div>
+          <button id="btn-run-batch-dataset" class="w-full sm:w-auto px-5 py-2.5 rounded-xl font-bold bg-cyan-600 hover:bg-cyan-500 text-white transition flex items-center justify-center space-x-2 shadow-lg shadow-cyan-600/30">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <span>Flag & Classify Dataset</span>
+          </button>
+        </div>
+
+        <!-- Batch KPI Metrics Bar -->
+        <div id="batch-stats-bar" class="grid grid-cols-2 md:grid-cols-5 gap-3 text-center font-mono text-xs hidden">
+          <div class="p-3.5 rounded-xl bg-slate-900 border border-slate-800">
+            <span class="text-slate-400 block text-[10px] uppercase tracking-wider">Total Scanned</span>
+            <span id="batch-total" class="text-xl font-extrabold text-white">0</span>
+          </div>
+          <div class="p-3.5 rounded-xl bg-rose-950/30 border border-rose-800/40">
+            <span class="text-rose-400 block text-[10px] uppercase tracking-wider">🚩 Flagged Phishing</span>
+            <span id="batch-flagged-phish" class="text-xl font-extrabold text-rose-400">0</span>
+          </div>
+          <div class="p-3.5 rounded-xl bg-emerald-950/30 border border-emerald-800/40">
+            <span class="text-emerald-400 block text-[10px] uppercase tracking-wider">✅ Verified Legit</span>
+            <span id="batch-verified-legit" class="text-xl font-extrabold text-emerald-400">0</span>
+          </div>
+          <div class="p-3.5 rounded-xl bg-amber-950/30 border border-amber-800/40">
+            <span class="text-amber-400 block text-[10px] uppercase tracking-wider">Phishing Rate</span>
+            <span id="batch-phish-rate" class="text-xl font-extrabold text-amber-400">0%</span>
+          </div>
+          <div class="p-3.5 rounded-xl bg-cyan-950/30 border border-cyan-800/40 col-span-2 md:col-span-1">
+            <span class="text-cyan-400 block text-[10px] uppercase tracking-wider">Mean Risk Score</span>
+            <span id="batch-avg-risk" class="text-xl font-extrabold text-cyan-300">0/100</span>
+          </div>
+        </div>
+
+        <!-- Filter & Export Controls Bar -->
+        <div id="batch-controls-bar" class="hidden flex flex-col md:flex-row items-center justify-between gap-3 text-xs pt-2">
+          <!-- Filter Tabs -->
+          <div class="flex items-center space-x-1.5 p-1 rounded-xl bg-slate-900 border border-slate-800">
+            <button id="batch-filter-all" class="px-3 py-1.5 rounded-lg font-semibold bg-slate-800 text-white transition">All (<span id="count-all">0</span>)</button>
+            <button id="batch-filter-phish" class="px-3 py-1.5 rounded-lg font-semibold text-rose-400 hover:bg-slate-800 transition">🚩 Flagged (<span id="count-phish">0</span>)</button>
+            <button id="batch-filter-legit" class="px-3 py-1.5 rounded-lg font-semibold text-emerald-400 hover:bg-slate-800 transition">✅ Legit (<span id="count-legit">0</span>)</button>
+          </div>
+
+          <!-- Search Input -->
+          <div class="w-full md:w-64">
+            <input type="text" id="batch-search-input" placeholder="Search subject or sender..." class="form-input text-xs py-1.5">
+          </div>
+
+          <!-- Downloads -->
+          <div class="flex space-x-2">
+            <button id="btn-download-batch-pdf" class="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-cyan-600 hover:bg-cyan-500 text-white transition flex items-center space-x-1.5 shadow-md shadow-cyan-600/20">
+              <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+              <span>Download Batch PDF Dossier</span>
+            </button>
+            <button id="btn-export-batch-csv" class="px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition flex items-center space-x-1.5">
+              <svg class="w-3.5 h-3.5 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+              <span>Export CSV</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Batch Results Table -->
+        <div class="overflow-x-auto rounded-xl border border-slate-800">
+          <table class="w-full text-left text-sm text-slate-300">
+            <thead class="bg-slate-900 text-xs uppercase font-bold text-slate-400 border-b border-slate-800">
+              <tr>
+                <th class="p-3">#</th>
+                <th class="p-3">Subject</th>
+                <th class="p-3">Sender</th>
+                <th class="p-3">Model Classification</th>
+                <th class="p-3 text-center">Risk Score</th>
+                <th class="p-3">Primary Tactic</th>
+                <th class="p-3 text-right">Detailed Report</th>
+              </tr>
+            </thead>
+            <tbody id="batch-tbody" class="divide-y divide-slate-800/60 font-mono text-xs">
+              <tr>
+                <td colspan="7" class="p-8 text-center text-slate-500">
+                  Attach an email dataset CSV/JSON above or click "Load 12 Benchmark Emails" to flag and generate reports.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 4: Attachment Checker View -->
+    <div id="view-attach" class="hidden space-y-6">
+      <div class="glass-panel p-8 rounded-2xl border border-slate-800 space-y-6">
+        <div>
+          <h2 class="text-2xl font-bold text-white">Safe Attachment Risk & SHA-256 Inspector</h2>
+          <p class="text-xs text-slate-400 mt-1">Inspects filenames, double extensions, and computes cryptographic hashes with zero execution risk.</p>
+        </div>
+
+        <div class="flex gap-3">
+          <input type="text" id="attach-filename-input" placeholder="e.g. Statement_2026.pdf.exe or Invoice_INV9901.docm" class="form-input flex-1">
+          <button id="btn-check-attach" class="py-3 px-6 rounded-xl font-bold text-white bg-cyan-600 hover:bg-cyan-500 transition">Inspect Attachment</button>
+        </div>
+
+        <div id="attach-result-box" class="hidden space-y-4"></div>
+      </div>
+    </div>
+
+    <!-- SECTION 5: EML File Inspector View -->
+    <div id="view-eml" class="hidden space-y-6">
+      <div class="glass-panel p-8 rounded-2xl border border-slate-800 space-y-6">
+        <div>
+          <h2 class="text-2xl font-bold text-white">Full RFC 822 / .EML Header & MIME Inspector</h2>
+          <p class="text-xs text-slate-400 mt-1">Drop a raw `.eml` email file to parse headers, verify SPF/DKIM/DMARC status, map hop chains, and scan embedded content.</p>
+        </div>
+
+        <div id="eml-dropzone" class="border-2 border-dashed border-slate-700 hover:border-cyan-500/50 rounded-2xl p-10 flex flex-col items-center justify-center text-center transition cursor-pointer bg-slate-900/40">
+          <svg class="w-12 h-12 text-slate-400 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
+          <p class="text-sm font-semibold text-slate-200">Click to browse or drag and drop your .EML file</p>
+          <p class="text-xs text-slate-500 mt-1">RFC 822 format accepted. Zero cloud retention.</p>
+          <input type="file" id="eml-file-input" accept=".eml,.txt" class="hidden">
+        </div>
+
+        <div id="eml-results" class="hidden space-y-6"></div>
+      </div>
+    </div>
+
+    <!-- SECTION 6: URL Deep Dive Sandbox -->
+    <div id="view-url" class="hidden space-y-6">
+      <div class="glass-panel p-8 rounded-2xl border border-slate-800 space-y-6">
+        <div>
+          <h2 class="text-2xl font-bold text-white">Static URL Threat Sandbox & Typosquat Analyzer</h2>
+          <p class="text-xs text-slate-400 mt-1">Deep inspection of suspicious URLs without ever fetching external servers or loading malicious tracking pixels.</p>
+        </div>
+
+        <div class="flex gap-3">
+          <input type="text" id="url-input" placeholder="e.g. http://paypal-verification-center.info/login.php" class="form-input flex-1">
+          <button id="btn-analyze-url" class="py-3 px-6 rounded-xl font-bold text-white bg-cyan-600 hover:bg-cyan-500 transition">Analyze URL</button>
+        </div>
+
+        <div id="url-standalone-result" class="hidden space-y-4"></div>
+      </div>
+    </div>
+
+    <!-- SECTION 7: Models & Benchmark View -->
+    <div id="view-models" class="hidden space-y-6">
+      <div class="glass-panel p-8 rounded-2xl border border-slate-800 space-y-6">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <h2 class="text-2xl font-bold text-white">Model Performance & Speed-Accuracy Benchmarks</h2>
+            <p class="text-xs text-slate-400 mt-1">Trained and calibrated on stratified datasets prioritizing Phishing Recall (Class 1).</p>
+          </div>
+          <button id="btn-refresh-metrics" class="px-4 py-2 rounded-xl text-xs font-semibold bg-slate-800 text-slate-200 hover:bg-slate-700 transition">Refresh Metrics</button>
+        </div>
+
+        <div class="overflow-x-auto rounded-xl border border-slate-800">
+          <table class="w-full text-left text-sm text-slate-300">
+            <thead class="bg-slate-900 text-xs uppercase font-bold text-slate-400 border-b border-slate-800">
+              <tr>
+                <th class="p-3.5">Model Architecture</th>
+                <th class="p-3.5">Accuracy</th>
+                <th class="p-3.5 text-cyan-400">Recall (Phish)</th>
+                <th class="p-3.5">Precision</th>
+                <th class="p-3.5">F1-Score</th>
+                <th class="p-3.5">ROC-AUC</th>
+                <th class="p-3.5">Latency / Email</th>
+                <th class="p-3.5">Size on Disk</th>
+              </tr>
+            </thead>
+            <tbody id="benchmark-tbody" class="divide-y divide-slate-800/60 font-mono text-xs"></tbody>
+          </table>
+        </div>
+
+        <!-- Concept Drift & Health Monitor Box -->
+        <div class="p-6 rounded-xl bg-slate-900/60 border border-slate-800 space-y-3">
+          <div class="flex items-center justify-between">
+            <h3 class="text-sm font-bold uppercase tracking-wider text-slate-300 flex items-center">
+              <svg class="w-4 h-4 mr-2 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+              Live Concept Drift & Distribution Monitor
+            </h3>
+            <span id="drift-status-badge" class="px-2.5 py-0.5 rounded text-[10px] font-bold uppercase bg-emerald-500/20 text-emerald-300">Healthy / No Drift</span>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-4 gap-4 text-xs font-mono">
+            <div class="p-3 rounded-lg bg-slate-950 border border-slate-800">
+              <span class="text-slate-500 block text-[10px]">Rolling Inferences</span>
+              <span id="drift-inferences" class="font-bold text-white text-base">150</span>
+            </div>
+            <div class="p-3 rounded-lg bg-slate-950 border border-slate-800">
+              <span class="text-slate-500 block text-[10px]">Phishing Traffic Ratio</span>
+              <span id="drift-phish-ratio" class="font-bold text-rose-400 text-base">48.0%</span>
+            </div>
+            <div class="p-3 rounded-lg bg-slate-950 border border-slate-800">
+              <span class="text-slate-500 block text-[10px]">Legitimate Ratio</span>
+              <span id="drift-legit-ratio" class="font-bold text-emerald-400 text-base">52.0%</span>
+            </div>
+            <div class="p-3 rounded-lg bg-slate-950 border border-slate-800">
+              <span class="text-slate-500 block text-[10px]">Mean Confidence</span>
+              <span id="drift-confidence" class="font-bold text-cyan-400 text-base">94.0%</span>
+            </div>
+          </div>
+          <p id="drift-rec-text" class="text-xs text-slate-400">Prediction confidence is stable. Decision boundaries calibrated against live email distribution.</p>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="relative z-10 border-t border-slate-800/80 bg-slate-950/80 py-6 text-center text-xs text-slate-500">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
+      <span>MailGuard Explainable Phishing Detection Platform</span>
+      <div class="flex items-center space-x-4">
+        <span>FastAPI</span>
+        <span>&bull;</span>
+        <span>Scikit-Learn</span>
+        <span>&bull;</span>
+        <span>Tactic Radar</span>
+        <span>&bull;</span>
+        <span>Simulator Quiz</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Detailed Email Forensic Report Modal Dialog -->
+  <div id="modal-email-report" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm hidden">
+    <div class="glass-panel w-full max-w-3xl max-h-[90vh] rounded-2xl border border-slate-700 shadow-2xl flex flex-col overflow-hidden bg-slate-900 text-slate-100 animate-in fade-in zoom-in-95 duration-200">
+      
+      <!-- Modal Header -->
+      <div class="p-5 border-b border-slate-800 flex items-center justify-between bg-slate-950/60">
+        <div class="flex items-center space-x-3">
+          <div class="w-9 h-9 rounded-xl bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 flex items-center justify-center font-bold">
+            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+          </div>
+          <div>
+            <h3 class="text-base font-bold text-white" id="modal-report-title">Forensic Audit Report - Email #1</h3>
+            <p class="text-xs text-slate-400">Deep inspection and multi-layer threat findings</p>
+          </div>
+        </div>
+        <button id="btn-close-modal" class="text-slate-400 hover:text-white p-2 rounded-lg hover:bg-slate-800 transition">
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+
+      <!-- Modal Body (Scrollable) -->
+      <div class="p-6 overflow-y-auto space-y-5 text-xs">
+        <!-- Verdict Banner -->
+        <div id="modal-verdict-banner" class="p-4 rounded-xl border flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+          <div>
+            <div class="flex items-center space-x-2">
+              <span id="modal-flag-badge" class="px-2.5 py-1 rounded-full text-xs font-bold uppercase tracking-wider"></span>
+              <span id="modal-verdict-badge" class="px-2 py-0.5 rounded text-[10px] font-bold uppercase"></span>
+            </div>
+            <p id="modal-verdict-desc" class="text-xs text-slate-300 mt-1.5"></p>
+          </div>
+          <div class="text-right sm:text-right font-mono">
+            <span class="text-[10px] uppercase text-slate-400 block font-semibold">Risk Score</span>
+            <span id="modal-risk-score" class="text-3xl font-black"></span>
+          </div>
+        </div>
+
+        <!-- Metadata Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 p-3.5 rounded-xl bg-slate-950 border border-slate-800/80 font-mono text-[11px]">
+          <div><span class="text-slate-400">Subject:</span> <span id="modal-subject" class="font-bold text-white block mt-0.5"></span></div>
+          <div><span class="text-slate-400">From:</span> <span id="modal-sender" class="text-cyan-300 block mt-0.5"></span></div>
+          <div><span class="text-slate-400">Phishing Probability:</span> <span id="modal-probability" class="text-amber-300 font-bold"></span></div>
+          <div><span class="text-slate-400">Model Engine:</span> <span id="modal-model-name" class="text-slate-300"></span></div>
+        </div>
+
+        <!-- Brand Impersonation Alert (conditional) -->
+        <div id="modal-brand-box" class="hidden p-3.5 rounded-xl bg-rose-950/40 border border-rose-500/40 text-rose-300 text-xs flex items-center space-x-3">
+          <svg class="w-5 h-5 shrink-0 text-rose-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <span id="modal-brand-text" class="font-semibold"></span>
+        </div>
+
+        <!-- Key Reasons -->
+        <div class="space-y-2">
+          <h4 class="font-bold uppercase tracking-wider text-slate-300 text-[11px] flex items-center">
+            <svg class="w-4 h-4 mr-1.5 text-cyan-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            Key Security Findings & Threat Indicators
+          </h4>
+          <div id="modal-reasons-list" class="space-y-1.5"></div>
+        </div>
+
+        <!-- Tactics Breakdown -->
+        <div class="space-y-2">
+          <h4 class="font-bold uppercase tracking-wider text-slate-300 text-[11px]">Social Engineering Tactic Breakdown</h4>
+          <div id="modal-tactics-grid" class="grid grid-cols-5 gap-2 text-center font-mono"></div>
+        </div>
+
+        <!-- URLs Detected -->
+        <div class="space-y-2">
+          <h4 class="font-bold uppercase tracking-wider text-slate-300 text-[11px]">Detected Links & Defanged URLs</h4>
+          <div id="modal-urls-list" class="space-y-1.5"></div>
+        </div>
+
+        <!-- Email Body Excerpt -->
+        <div class="space-y-2">
+          <h4 class="font-bold uppercase tracking-wider text-slate-300 text-[11px]">Email Body Excerpt</h4>
+          <div id="modal-body-excerpt" class="p-3.5 rounded-xl bg-slate-950 border border-slate-800 font-mono text-xs text-slate-300 max-h-36 overflow-y-auto whitespace-pre-wrap"></div>
+        </div>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="p-4 border-t border-slate-800 bg-slate-950/60 flex flex-col sm:flex-row items-center justify-between gap-3">
+        <span class="text-slate-400 text-xs">PDF generated with forensic timestamps and vector graphics.</span>
+        <div class="flex space-x-2">
+          <button id="btn-download-modal-pdf" class="px-4 py-2 rounded-xl text-xs font-bold bg-cyan-600 hover:bg-cyan-500 text-white transition flex items-center space-x-1.5 shadow-lg shadow-cyan-600/25">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+            <span>Download Detailed Report (PDF)</span>
+          </button>
+          <button id="btn-close-modal-bottom" class="px-4 py-2 rounded-xl text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-300 transition">Close</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>
